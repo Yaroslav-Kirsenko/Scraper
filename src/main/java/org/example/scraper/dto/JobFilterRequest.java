@@ -17,7 +17,7 @@ public class JobFilterRequest {
     @Schema(description = "Filter by function", example = "Remote")
     private String location;
 
-    @Schema(description = "Фільтр за функцією", example = "Engineering")
+    @Schema(description = "Filter by function", example = "Engineering")
     private String jobFunction;
 
     @Schema(description = "Filter by industry", example = "Software")
