@@ -1,116 +1,172 @@
 # Installation Guide
 
-## Prerequisites
+---
 
-### 1. Install Docker Desktop (Windows)
+## ️ Prerequisites
 
-1. Go to [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
-2. Click **"Download for Windows"**
-3. Run the installer and follow the steps
-4. After install — **restart your computer**
-5. Launch **Docker Desktop** from the Start menu
-6. Wait until you see **"Docker is running"** in the system tray
-
-> Make sure WSL 2 is enabled — Docker Desktop will prompt you if it's not.
-> Install it with: `wsl --install` in PowerShell (run as Administrator)
-
-### 2. Install Git (if not installed)
-
-Download from [https://git-scm.com/download/win](https://git-scm.com/download/win) and install with default settings.
+* Java 21+
+* Maven 3.9+
+* Docker Desktop (optional but recommended)
+* PostgreSQL (if running without Docker)
+* Google Chrome (latest)
 
 ---
 
-## Running with Docker (Recommended)
+##  Run with Docker (Recommended)
 
-### Step 1 — Clone the repository
-
-Open **PowerShell** or **Command Prompt** and run:
+### 1. Clone repo
 
 ```bash
 git clone https://github.com/Yaroslav-Kirsenko/Scraper
-cd YOUR_REPO
+cd Scraper
 ```
 
-### Step 2 — Start the application
+### 2. Run
 
 ```bash
 docker-compose up --build
 ```
 
-This command will:
-- Build the Spring Boot app into a Docker image
-- Start PostgreSQL database
-- Start the application
-- The scraper will run automatically on startup
+### 3. Open Swagger
 
-> First run takes 3–5 minutes (downloading images and building the project)
-
-### Step 3 — Open Swagger UI
-
-Go to: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
-
-### Stop the application
-
-```bash
-docker-compose down
-```
-
-To also delete the database data:
-
-```bash
-docker-compose down -v
-```
+http://localhost:8080/swagger-ui.html
 
 ---
 
-## Running without Docker (Manual Setup)
+## Run Locally (Manual)
 
-### Requirements
-
-- Java 21+ — [https://adoptium.net](https://adoptium.net)
-- Maven 3.9+ — [https://maven.apache.org/download.cgi](https://maven.apache.org/download.cgi)
-- PostgreSQL 16 — [https://www.postgresql.org/download/windows](https://www.postgresql.org/download/windows)
-- Google Chrome browser (latest version)
-
-### Step 1 — Create the database
-
-Open pgAdmin or psql and run:
+### 1. Create DB
 
 ```sql
 CREATE DATABASE scraper;
 ```
 
-### Step 2 — Configure the application
+---
 
-Edit `src/main/resources/application.properties`:
+### 2. Configure application.properties
 
-```properties
+```
 spring.datasource.url=jdbc:postgresql://localhost:5432/scraper
-spring.datasource.username=postgres
+spring.datasource.username=YOUR_USERNAME
 spring.datasource.password=YOUR_PASSWORD
 ```
 
-### Step 3 — Build and run
+---
+
+### 3. Build & run
 
 ```bash
 mvn clean package -DskipTests
 java -jar target/*.jar
 ```
 
-### Step 4 — Open Swagger UI
+---
 
-Go to: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+## Google Sheets Setup
+
+### 1. Create Google Cloud Project
+
+Go to:
+https://console.cloud.google.com/
 
 ---
 
-## Scraper Configuration
+### 2. Enable API
 
-You can adjust scraper behavior in `application.properties`:
+Enable:
 
-| Property | Default | Description |
-|----------|---------|-------------|
-| `scraper.cron` | `0 0 */6 * * *` | Scrape schedule (every 6 hours) |
-| `scraper.max-scrape-duration-ms` | `60000` | Max scroll time in ms (60 seconds) |
-| `scraper.scroll-delay-ms` | `1500` | Delay after each scroll |
-| `scraper.loading-delay-ms` | `2000` | Delay after clicking Load More |
-| `scraper.timeout-seconds` | `30` | WebDriver wait timeout |
+* Google Sheets API
+
+---
+
+### 3. Create Service Account
+
+* Go to **IAM & Admin → Service Accounts**
+* Create new account
+* Generate JSON key
+
+---
+
+### 4. Add credentials to project
+
+Place file:
+
+```
+src/main/resources/google-credentials.json
+```
+
+---
+
+### 5. Share your Google Sheet
+
+Open your sheet and click **Share**
+
+Add service account email like:
+
+```
+your-service-account@project-id.iam.gserviceaccount.com
+```
+
+Give role:
+
+```
+Editor
+```
+
+---
+
+### 6. Configure application
+
+```
+google.sheets.enabled=true
+google.sheets.spreadsheet-id=YOUR_SPREADSHEET_ID
+google.sheets.sheet-name=Scraper Logs
+```
+
+---
+
+## Common Issues
+
+### 400 Unable to parse range
+
+Fix:
+
+```
+'Sheet Name'
+```
+
+Example:
+
+```
+'Scraper Logs'
+```
+
+---
+
+### 403 Permission denied
+
+* Sheet not shared with service account
+
+---
+
+### Credentials not found
+
+* File missing in resources folder
+
+---
+
+## Stop Docker
+
+```bash
+docker-compose down
+```
+
+---
+
+## Remove DB volume
+
+```bash
+docker-compose down -v
+```
+
+---

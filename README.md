@@ -1,53 +1,129 @@
 # Techstars Job Scraper
 
-A Spring Boot application that scrapes job listings from [jobs.techstars.com](https://jobs.techstars.com/jobs) and provides a REST API to query them with filters and pagination.
+A Spring Boot application that scrapes job listings from https://jobs.techstars.com/jobs and provides a REST API to query them with filters and pagination.
+
+---
 
 ## Features
 
-- Automatically scrapes job listings using Selenium (Chrome headless)
-- Stores jobs in PostgreSQL
-- REST API with filtering by title, company, location, tags, remote, industry, job function
-- Pagination support
-- Scrape logs (start time, end time, vacancies found/added/updated/deactivated)
-- Swagger UI for API exploration
-- Scheduled scraping every 6 hours
-- Manual scrape trigger via API
+* Automated job scraping using Selenium (Chrome headless)
+* Stores data in PostgreSQL
+* REST API with filtering and pagination
+* Scheduled scraping every 6 hours
+* Manual scraping trigger via API
+* Scrape logs tracking (start/end time, stats)
+* Google Sheets integration for logging results
+* Swagger UI for API testing
+
+---
 
 ## Tech Stack
 
-- Java 21
-- Spring Boot 3
-- PostgreSQL
-- Selenium + WebDriverManager
-- Jsoup
-- Swagger / SpringDoc
-- Docker + Docker Compose
-- Maven
+* Java 21
+* Spring Boot 3
+* PostgreSQL
+* Selenium + WebDriverManager
+* Jsoup
+* Spring Data JPA
+* Swagger (SpringDoc)
+* Docker & Docker Compose
+* Maven
+
+---
 
 ## API Endpoints
 
-| Method | URL | Description |
-|--------|-----|-------------|
-| GET | `/api/jobs` | List jobs with filters and pagination |
-| GET | `/api/jobs/{id}` | Get job by ID |
-| POST | `/api/scraper/trigger` | Trigger scrape manually |
-| GET | `/api/scraper/logs` | View scrape logs |
+| Method | Endpoint               | Description                        |
+| ------ | ---------------------- | ---------------------------------- |
+| GET    | `/api/jobs`            | Get jobs with filters & pagination |
+| GET    | `/api/jobs/{id}`       | Get job by ID                      |
+| POST   | `/api/scraper/trigger` | Run scraper manually               |
+| GET    | `/api/scraper/logs`    | Get scraping logs                  |
+
+---
+
+## Filters
+
+| Parameter      | Example          |
+| -------------- | ---------------- |
+| title          | Backend Engineer |
+| companyName    | Google           |
+| location       | Remote           |
+| jobFunction    | Engineering      |
+| industry       | Software         |
+| employmentType | Full-time        |
+| remote         | true             |
+| tag            | Machine Learning |
+
+---
+
+## Google Sheets Integration
+
+The application can log scraping results to Google Sheets.
+
+### Features:
+
+* Logs each scraping run
+* Stores number of jobs scraped
+* Tracks execution time
+
+###️ Important
+
+Credentials file is NOT included in the repository.
+
+You must provide your own:
+
+```
+src/main/resources/google-credentials.json
+```
+
+---
 
 ## Swagger UI
 
-After starting the app, open: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+After запуск:
 
-## Filter Parameters
+http://localhost:8080/swagger-ui.html
 
-| Parameter | Type | Example |
-|-----------|------|---------|
-| `title` | String | `Backend Engineer` |
-| `companyName` | String | `Google` |
-| `location` | String | `New York` |
-| `jobFunction` | String | `Engineering` |
-| `industry` | String | `Software` |
-| `employmentType` | String | `Full-time` |
-| `remote` | Boolean | `true` |
-| `tag` | String | `Machine Learning` |
+---
 
-See [INSTALL.md](INSTALL.md) for setup instructions.
+## How to Run
+
+See detailed setup instructions in:
+`INSTALL.md`
+
+---
+
+## Project Structure
+
+```
+src/main/java/org/example/scraper
+│
+├── config          # Configuration classes
+├── controller      # REST controllers
+├── dto             # Request/response models
+├── entity          # JPA entities
+├── repository      # Database repositories
+├── scheduler       # Scheduled tasks
+├── selectors       # Scraper selectors & scripts
+├── service         # Business logic (scraping, sheets, etc.)
+```
+
+---
+
+##  Notes
+
+* Google credentials are excluded via `.gitignore`
+* Chrome browser must be installed
+* First run may take time due to WebDriver download
+
+---
+
+## Future Improvements
+
+* Proxy support (avoid blocking)
+* User-Agent rotation
+* Caching layer (Redis)
+* UI dashboard
+
+---

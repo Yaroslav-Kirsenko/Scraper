@@ -13,6 +13,7 @@ public class ScraperProperties {
     private String baseUrl;
     private String cron;
     private String userAgent;
+    private String googleSheetsId;
 
     private int timeoutSeconds = 60;
     private long scrollDelayMs = 1500;

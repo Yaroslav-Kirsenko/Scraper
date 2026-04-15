@@ -36,6 +36,7 @@ public class ScraperService {
     private final ScraperProperties props;
     private final JobService jobService;
     private final ScrapeLogRepository scrapeLogRepository;
+    private final GoogleSheetsService googleSheetsService;
 
 
     public void scrape() {
@@ -75,6 +76,7 @@ public class ScraperService {
             scrapeLog.setVacanciesUpdated(updated);
             scrapeLog.setVacanciesDeactivated(deactivated);
             scrapeLogRepository.save(scrapeLog);
+            googleSheetsService.appendScrapeLog(scrapeLog);
         }
     }
 
