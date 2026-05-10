@@ -2,7 +2,6 @@ package org.example.scraper.selectors;
 
 
 public class TechstarsSelectors {
-
     public static final String JOB_CARD      = "div[data-testid='job-list-item']";
     public static final String JOB_TITLE     = "div[itemprop='title']";
     public static final String JOB_LINK      = "a[data-testid='job-title-link']";
